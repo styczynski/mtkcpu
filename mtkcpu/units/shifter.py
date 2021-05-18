@@ -1,6 +1,7 @@
-from nmigen import Signal, Elaboratable, Module, signed
-from mtkcpu.utils.isa import Funct3, Funct7, InstrType
+from nmigen import Elaboratable, Module, Signal, signed
+
 from mtkcpu.utils.common import matcher
+from mtkcpu.utils.isa import Funct3, Funct7, InstrType
 
 
 class ShifterUnit(Elaboratable):

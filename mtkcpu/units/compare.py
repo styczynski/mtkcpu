@@ -1,6 +1,7 @@
-from nmigen import Elaboratable, Signal, Module
-from mtkcpu.utils.isa import Funct3, InstrType
+from nmigen import Elaboratable, Module, Signal
+
 from mtkcpu.utils.common import matcher
+from mtkcpu.utils.isa import Funct3, InstrType
 
 
 class CompareUnit(Elaboratable):

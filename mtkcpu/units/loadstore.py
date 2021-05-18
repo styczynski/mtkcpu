@@ -1,5 +1,6 @@
-from nmigen import Cat, Signal, Elaboratable, Module, signed, Array
-from nmigen.hdl.rec import Record, DIR_FANOUT, DIR_FANIN
+from nmigen import Array, Cat, Elaboratable, Module, Signal, signed
+from nmigen.hdl.rec import DIR_FANIN, DIR_FANOUT, Record
+
 from mtkcpu.utils.common import matcher
 from mtkcpu.utils.isa import Funct3, InstrType
 
@@ -122,9 +123,7 @@ match_store = matcher(
 
 
 def match_loadstore_unit(op, f3, f7):
-    return match_load(op, f3, f7) | match_store(
-        op, f3, f7
-    )
+    return match_load(op, f3, f7) | match_store(op, f3, f7)
 
 
 class Selector(Elaboratable):

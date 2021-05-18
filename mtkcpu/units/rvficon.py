@@ -4,7 +4,7 @@
 from functools import reduce
 from operator import or_
 
-from nmigen import Signal, Elaboratable, Module, Const, Record
+from nmigen import Const, Elaboratable, Module, Record, Signal
 from nmigen.hdl.rec import DIR_FANOUT
 
 __all__ = ["rvfi_layout", "RVFIController"]

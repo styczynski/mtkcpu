@@ -2,9 +2,11 @@
 from enum import Enum
 from functools import reduce
 from operator import or_
-from nmigen import Mux, Cat, Signal, Const, Record, Elaboratable, Module, Memory, signed
+
+from nmigen import (Cat, Const, Elaboratable, Memory, Module, Mux, Record,
+                    Signal, signed)
 from nmigen.hdl.rec import Layout
-from mtkcpu.utils.common import START_ADDR
+
 from mtkcpu.units.adder import AdderUnit, match_adder_unit
 from mtkcpu.units.compare import CompareUnit, match_compare_unit
 from mtkcpu.units.loadstore import (LoadStoreUnit, MemoryArbiter, MemoryUnit,
@@ -13,9 +15,8 @@ from mtkcpu.units.logic import LogicUnit, match_logic_unit
 from mtkcpu.units.rvficon import RVFIController, rvfi_layout
 from mtkcpu.units.shifter import ShifterUnit, match_shifter_unit
 from mtkcpu.units.upper import match_auipc, match_lui
-from mtkcpu.utils.common import matcher
-from mtkcpu.utils.isa import Funct3, InstrType, Funct7
-
+from mtkcpu.utils.common import START_ADDR, matcher
+from mtkcpu.utils.isa import Funct3, Funct7, InstrType
 
 MEM_WORDS = 10
 
@@ -113,7 +114,7 @@ class MtkCpu(Elaboratable):
         sync = m.d.sync
 
         if self.with_rvfi:
-            rvficon = m.submodules.rvficon = RVFIController() # NOQA
+            rvficon = m.submodules.rvficon = RVFIController()  # NOQA
             self.rvfi = Record(rvfi_layout)
 
         sync += self.DEBUG_CTR.eq(self.DEBUG_CTR + 1)

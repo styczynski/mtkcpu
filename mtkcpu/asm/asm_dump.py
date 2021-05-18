@@ -1,7 +1,7 @@
 import io
 import os
-from typing import List, Union, Generator
 import subprocess
+from typing import Generator, List
 
 from ppci.api import asm, link
 
@@ -56,7 +56,7 @@ def dump_asm(
     verbose: bool = False,
 ) -> List[int]:
 
-    obj = asm(io.StringIO(code_input), "riscv") # NOQA
+    obj = asm(io.StringIO(code_input), "riscv")  # NOQA
     obj = link([obj])
 
     code = obj.get_section("code").data
@@ -94,7 +94,10 @@ def dump_instrs(u32_arr: List[int]):
 
 
 if __name__ == "__main__":
-    dump_asm("""
+    dump_asm(
+        """
     .section code
         jalr x10, x8, 0x0
-    """, verbose=True)
+    """,
+        verbose=True,
+    )

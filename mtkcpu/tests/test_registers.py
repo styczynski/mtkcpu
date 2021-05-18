@@ -1,17 +1,15 @@
 from mtkcpu.utils.tests.memory import MemoryContents
 from mtkcpu.utils.tests.registers import RegistryContents
-from mtkcpu.utils.tests.utils import (MemTestCase, MemTestSourceType, mem_test)
+from mtkcpu.utils.tests.utils import (ADD, AND, ANDI, OR, ORI, SLL, SLLI, SRA,
+                                      SRAI, SRL, SRLI, SUB, XOR, XORI,
+                                      MemTestCase, MemTestSourceType, mem_test,
+                                      x1, x2, x3, x5, x10, x11)
 
 REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'add'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            add x3, x2, x3
-            ; lw t0, 0(t1)
-            ; li t1, 0xdeadbeef
-        """,
+        source=ADD(x3, x2, x3),
         out_reg=3,
         out_val=5,
         timeout=5,
@@ -21,10 +19,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'sub'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sub x10, x3, x2
-        """,
+        source=SUB(x10, x3, x2),
         out_reg=10,
         out_val=1,
         timeout=5,
@@ -34,10 +29,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'srli'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            srli x10, x11, 2
-        """,
+        source=SRLI(x10, x11, 2),
         out_reg=10,
         out_val=0b1,
         timeout=5,
@@ -47,10 +39,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'srl'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            srl x10, x11, x1
-        """,
+        source=SRL(x10, x11, x1),
         out_reg=10,
         out_val=0b101,
         timeout=5,
@@ -60,10 +49,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'slli'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            slli x10, x11, 2
-        """,
+        source=SLLI(x10, x11, 2),
         out_reg=10,
         out_val=0b11100,
         timeout=5,
@@ -73,10 +59,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'sll'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sll x10, x11, x1
-        """,
+        source=SLL(x10, x11, x1),
         out_reg=10,
         out_val=0b10110,
         timeout=5,
@@ -86,10 +69,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'sra'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sra x10, x11, x1
-        """,
+        source=SRA(x10, x11, x1),
         out_reg=10,
         out_val=0b101,
         timeout=5,
@@ -99,10 +79,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'srai'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            srai x10, x11, 2
-        """,
+        source=SRAI(x10, x11, 2),
         out_reg=10,
         out_val=0b1,
         timeout=5,
@@ -113,10 +90,7 @@ REGISTERS_TESTS = [
         # calculated by https://www.cs.cornell.edu/courses/cs3410/2019sp/riscv/interpreter/
         name="fully functional 'srai'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            srai x2, x1, 4
-        """,
+        source=SRAI(x2, x1, 4),
         out_reg=2,
         out_val=-7
         & 0xFFFFFFFF,  # ah, that python infinite-bit representation...
@@ -127,10 +101,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="fully functional 'sra'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sra x2, x2, x1
-        """,
+        source=SRA(x2, x2, x1),
         out_reg=2,
         out_val=0b11000000000000000000000000000000,
         timeout=5,
@@ -140,10 +111,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'or'",
         source_type=MemTestSourceType.TEXT,
-        source=f"""
-        .section code
-            or x2, x{0b00001}, x{0b00111}
-        """,
+        source=OR(x2, 0b00001, 0b00111),
         out_reg=2,
         out_val=0b111,
         timeout=5,
@@ -153,10 +121,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'and'",
         source_type=MemTestSourceType.TEXT,
-        source=f"""
-        .section code
-            and x2, x{0b10011}, x{0b00111}
-        """,
+        source=AND(x2, 0b10011, 0b00111),
         out_reg=2,
         out_val=0b11,
         timeout=5,
@@ -166,10 +131,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'xor'",
         source_type=MemTestSourceType.TEXT,
-        source=f"""
-        .section code
-            xor x2, x{0b10101}, x{0b1111}
-        """,
+        source=XOR(x2, 0b10101, 0b1111),
         out_reg=2,
         out_val=0b11010,
         timeout=5,
@@ -179,10 +141,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'xori'",
         source_type=MemTestSourceType.TEXT,
-        source=f"""
-        .section code
-            xori x5, x{0b11111}, {0b01010}
-        """,
+        source=XORI(x5, 0b11111, 0b01010),
         out_reg=5,
         out_val=0b10101,
         timeout=5,
@@ -192,10 +151,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'ori'",
         source_type=MemTestSourceType.TEXT,
-        source=f"""
-        .section code
-            ori x2, x{0b00001}, {0b00111}
-        """,
+        source=ORI(x2, 0b00001, 0b00111),
         out_reg=2,
         out_val=0b111,
         timeout=5,
@@ -205,10 +161,7 @@ REGISTERS_TESTS = [
     MemTestCase(
         name="simple 'andi'",
         source_type=MemTestSourceType.TEXT,
-        source=f"""
-        .section code
-            andi x2, x{0b10011}, {0b00111}
-        """,
+        source=ANDI(x2, 0b10011, 0b00111),
         out_reg=2,
         out_val=0b11,
         timeout=5,

@@ -1,5 +1,5 @@
-from typing import Optional
 from functools import reduce
+from typing import Optional
 
 from mtkcpu.cpu.cpu import MtkCpu
 from mtkcpu.utils.tests.memory import MemoryContents, MemState
@@ -7,7 +7,10 @@ from mtkcpu.utils.tests.memory import MemoryContents, MemState
 
 def get_sel_bus_mask(sel):
     sel = format(sel, "04b")  # '1111' string for full mask
-    return reduce(lambda val, el: (val << 8) + el, map(lambda x: 0xFF if int(x) == 1 else 0x00, sel))
+    return reduce(
+        lambda val, el: (val << 8) + el,
+        map(lambda x: 0xFF if int(x) == 1 else 0x00, sel),
+    )
 
 
 def get_sim_memory_test(

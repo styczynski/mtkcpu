@@ -1,7 +1,7 @@
 from typing import Optional
 
-from pytest import main as run_tests
 import typer
+from pytest import main as run_tests
 
 tests_cli = typer.Typer()
 

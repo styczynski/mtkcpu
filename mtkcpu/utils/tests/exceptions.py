@@ -28,10 +28,10 @@ class InvalidMemoryContentsError(Exception):
     index: int
 
     def __init__(self, message: str, index: int):
+        self.index = index
         super().__init__(
             f"Invalid memory contents at index {self.index}: {message}"
         )
-        self.index = index
 
 
 class EmptyMemoryError(InvalidMemoryContentsError):

@@ -2,17 +2,18 @@ from bitstring import Bits
 
 from mtkcpu.utils.tests.memory import MemoryContents
 from mtkcpu.utils.tests.registers import RegistryContents
-from mtkcpu.utils.tests.utils import MemTestCase, MemTestSourceType, mem_test
+from mtkcpu.utils.tests.utils import (ADDI, LB, LBU, LH, LHU, LW, SB, SH, SW,
+                                      MemTestCase, MemTestSourceType, mem_test,
+                                      x0, x1, x5, x10, x11)
 
 MEMORY_TESTS = [
     MemTestCase(
         name="simple 'lw'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            addi x10, x0, 0xde
-            lw x11, 0xde(x0)
-        """,
+        source=[
+            ADDI(x10, x0, -2048),
+            LW(x11, x0, 0xDE),
+        ],
         out_reg=11,
         out_val=0xDEADBEEF,
         timeout=10,
@@ -22,10 +23,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'sw'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sw x11, 0xaa(x0)
-        """,
+        source=SW(x0, x11, 0xAA),
         timeout=10,
         reg_init=RegistryContents.fill(),
         mem_out=MemoryContents(memory={0xAA: 11}),
@@ -33,10 +31,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'lh'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            lh x5, 0xaa(x1)
-        """,
+        source=LH(x5, x1, 0xAA),
         timeout=10,
         out_reg=5,
         out_val=Bits(
@@ -54,10 +49,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'lhu'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            lhu x5, 0(x0)
-        """,
+        source=LHU(x5, x0, 0),
         timeout=10,
         out_reg=5,
         out_val=0b11111111_00000000,
@@ -72,10 +64,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'lb'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            lb x5, 0(x0)
-        """,
+        source=LB(x5, x0, 0),
         timeout=10,
         out_reg=5,
         out_val=0b11111101,  # TODO fix that unsigned bus.
@@ -84,10 +73,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'lbu'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            lbu x5, 0(x0)
-        """,
+        source=LBU(x5, x0, 0),
         timeout=10,
         out_reg=5,
         out_val=5,
@@ -96,10 +82,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'sh'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sh x5, 0(x0)
-        """,
+        source=SH(x5, x0, 0),
         timeout=10,
         reg_init=RegistryContents.fill(),
         mem_init=MemoryContents(memory={0x0: 5}),
@@ -108,10 +91,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="negative 'sh'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sh x5, 0(x0)
-        """,
+        source=SH(x0, x5, 0),
         timeout=10,
         reg_init=RegistryContents.empty(value=-5),
         mem_out=MemoryContents(memory={0x0: Bits(int=-5, length=16).uint}),
@@ -119,10 +99,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="simple 'sb'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sb x5, 0(x1)
-        """,
+        source=SH(x5, x1, 0),
         timeout=10,
         reg_init=RegistryContents.empty(value=0xAA),
         mem_out=MemoryContents(memory={0xAA: 0xAA}),
@@ -130,10 +107,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="overwrite 'sb'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sb x5, 0(x1)
-        """,
+        source=SB(x1, x5, 0),
         timeout=10,
         reg_init=RegistryContents.empty(value=0xAA),
         mem_init=MemoryContents(memory={0xAA: 0xDEADBEEF}),
@@ -142,10 +116,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="overwrite 'sh'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sh x5, 0xbb(x0)
-        """,
+        source=SH(x0, x5, 0xBB),
         timeout=10,
         reg_init=RegistryContents.empty(value=0xAAAA),
         mem_init=MemoryContents(memory={0xBB: 0xDEADBEEF}),
@@ -154,10 +125,7 @@ MEMORY_TESTS = [
     MemTestCase(
         name="overwrite 'sw'",
         source_type=MemTestSourceType.TEXT,
-        source="""
-        .section code
-            sw x5, 0xbb(x0)
-        """,
+        source=SW(x0, x5, 0xBB),
         timeout=10,
         reg_init=RegistryContents.empty(value=0xAAAA),
         mem_init=MemoryContents(memory={0xBB: 0xDEADBEEF}),

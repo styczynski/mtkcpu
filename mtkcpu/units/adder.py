@@ -1,4 +1,5 @@
-from nmigen import Signal, Elaboratable, Module, Cat, Mux
+from nmigen import Cat, Elaboratable, Module, Mux, Signal
+
 from mtkcpu.utils.common import matcher
 from mtkcpu.utils.isa import Funct3, Funct7, InstrType
 
